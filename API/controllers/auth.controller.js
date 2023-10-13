@@ -82,3 +82,20 @@ export const google = async (req, res, next) => {
     next(error);
   }
 };
+
+
+export const updateUser = (req,res,next) => {
+  if (req.user.id !== req.params.id) return next(errorHandler(401, "you can only update your own account "))
+  
+
+
+  try {
+    if (req.body.password) {
+      req.body.password= bcryptjs.hashSync
+    }
+
+
+  } catch (error) {
+    next(error)
+  }
+}
