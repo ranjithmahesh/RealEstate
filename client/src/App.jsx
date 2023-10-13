@@ -5,17 +5,20 @@ import SingUp from "./pages/SingUp";
 import About from "./pages/About";
 import Profile from "./pages/Profile";
 import Header from "./component/Header";
+import PrivateRoutes from "./component/PrivateRoutes";
 function App() {
   return (
     <BrowserRouter>
-      <Header/>
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
 
         <Route path="/sign-in" element={<SingIn />} />
         <Route path="/sign-up" element={<SingUp />} />
         <Route path="/about" element={<About />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route element={<PrivateRoutes />}>
+          <Route path="/profile" element={<Profile />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
