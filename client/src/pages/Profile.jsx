@@ -8,6 +8,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { app } from "../firebase";
 import {
+  deleteUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
   updateUserFailure,
   updateUserStart,
   updateUserSuccess,
@@ -30,6 +33,23 @@ function Profile() {
   //  allow read;
   //     allow write: if request.resource.size<2*1024*1024 &&
   //     request.resource.contentType.matches("image/.*");
+
+  const handleDeleteUser = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message));
+        return;
+      }
+      dispatch(deleteUserSuccess(data));
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
+    }
+  };
 
   useEffect(() => {
     if (file) {
@@ -151,7 +171,12 @@ function Profile() {
       </form>
 
       <div className="flex justify-between mt-5 ">
-        <span className="text-red-700 cursor-pointer">Delete Account</span>
+        <span
+          onClick={handleDeleteUser}
+          className="text-red-700 cursor-pointer"
+        >
+          Delete Account
+        </span>
         <span className="text-red-700 cursor-pointer">Sign Out</span>
       </div>
       <p className="text-red-700 mt-5">{error ? error : ""}</p>
