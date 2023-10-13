@@ -83,19 +83,11 @@ export const google = async (req, res, next) => {
   }
 };
 
-
-export const updateUser = (req,res,next) => {
-  if (req.user.id !== req.params.id) return next(errorHandler(401, "you can only update your own account "))
-  
-
-
+export const signout = async (req, res, next) => {
   try {
-    if (req.body.password) {
-      req.body.password= bcryptjs.hashSync
-    }
-
-
+    res.clearCookie("access_token");
+    res.status(200).json("user has been looged out");
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
