@@ -18,6 +18,7 @@ import {
   updateUserStart,
   updateUserSuccess,
 } from "../redux/user";
+import { Link } from "react-router-dom";
 function Profile() {
   const fileRef = useRef(null);
   const dispatch = useDispatch();
@@ -187,6 +188,12 @@ function Profile() {
         >
           {loading ? "Loading..." : "UPDATE"}
         </button>
+        <Link
+          to={"/create-listing"}
+          className="bg-green-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80  w-full text-center"
+        >
+          Create listing
+        </Link>
       </form>
 
       <div className="flex justify-between mt-5 ">
