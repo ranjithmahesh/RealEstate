@@ -29,6 +29,8 @@ function Profile() {
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
   const [update, setUpdate] = useState(false);
+  const [userListings, setUserListings] = useState([]);
+  const [showListingError, setshowListingError] = useState(false);
   // console.log(formData);
   // console.log(filePerc);
   // console.log(fileUploadError);
@@ -128,6 +130,40 @@ function Profile() {
     }
   };
 
+  const handleShowListinhs = async () => {
+    try {
+      setshowListingError(false);
+      const res = await fetch(`/api/user/listing/${currentUser._id}`);
+      const data = await res.json();
+      if (data.success === false) {
+        showListingError(true);
+        return;
+      }
+      setUserListings(data);
+      console.log(data);
+    } catch (error) {
+      setshowListingError(true);
+    }
+  };
+
+  const handleListingDelete = async (listingid) => {
+    try {
+      const res = await fetch(`/api/listing/delete/${listingid}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        console.log(data.message);
+        return;
+      }
+      setUserListings((prev) =>
+        prev.filter((listing) => listing._id !== listingid)
+      );
+    } catch (error) {
+      clg(error.message);
+    }
+  };
+
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className=" text-3xl font-semibold text-center my-7">Profile</h1>
@@ -211,6 +247,47 @@ function Profile() {
       <p className="text-green-700 mt-5">
         {update ? "User is updated successfully!!!" : ""}
       </p>
+      <button onClick={handleShowListinhs} className="text-green-700 w-full ">
+        ShowingListings
+      </button>
+      <p>{showListingError ? "Error showing Listings" : ""}</p>
+
+      {userListings && userListings.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <h1 className="text-center mt-7 text-2xl font-semibold">
+            Your Listings
+          </h1>
+          {userListings.map((listing, i) => (
+            <div
+              key={i}
+              className="border rounded-lg p-3 flex justify-between items-center gap-4"
+            >
+              <Link to={`/listing/${listing._id}`}>
+                <img
+                  src={listing.imageUrls[0]}
+                  alt="listingCover"
+                  className="h-16 w-16  object-contain "
+                />
+              </Link>
+              <Link
+                className=" text-slate-700 font-semibold flex-1 hover:underline truncate"
+                to={`/listing/${listing._id}`}
+              >
+                <p>{listing.name}</p>
+              </Link>
+              <div className="flex flex-col">
+                <button
+                  className="text-red-700 uppercase"
+                  onClick={() => handleListingDelete(listing._id)}
+                >
+                  Delete
+                </button>
+                <button className="text-green-700"> Edit</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
