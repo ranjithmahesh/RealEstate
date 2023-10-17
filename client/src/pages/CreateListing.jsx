@@ -266,7 +266,7 @@ export default function CreateListing() {
                 id="regularPrice"
                 required
                 min="50"
-                max="10000"
+                max="100000"
                 className="p-3 border border-gray-300 rounded-lg"
                 value={formData.regularPrice}
               />
@@ -284,7 +284,7 @@ export default function CreateListing() {
                   id="discountPrice"
                   required
                   min="0"
-                  max="10000"
+                  max="100000"
                   className="p-3 border border-gray-300 rounded-lg"
                   value={formData.discountPrice}
                 />
